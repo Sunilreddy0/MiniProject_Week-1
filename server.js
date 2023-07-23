@@ -6,11 +6,9 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 
-// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-// Create a MySQL connection
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -18,7 +16,6 @@ const db = mysql.createConnection({
   database: 'npci',
 });
 
-// Connect to the database
 db.connect((err) => {
   if (err) {
     throw err;
@@ -26,7 +23,6 @@ db.connect((err) => {
   console.log('MySQL connected!');
 });
 
-// Create the users table if it doesn't exist
 const createTableQuery = `CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -43,9 +39,8 @@ db.query(createTableQuery, (err, result) => {
 });
 
 app.post('/register', (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, ebalance} = req.body;
   
-  // Check for duplicate email
   const checkDuplicateQuery = 'SELECT * FROM users WHERE email = ?';
   db.query(checkDuplicateQuery, email, (err, result) => {
     if (err) {
@@ -55,9 +50,8 @@ app.post('/register', (req, res) => {
     if (result.length > 0) {
       return res.status(409).json({ message: 'Email already exists.' });
     } else {
-      // Insert the new user into the database
-      const insertQuery = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-      db.query(insertQuery, [name, email, password], (err, result) => {
+      const insertQuery = 'INSERT INTO users (name, email, password, ebalance) VALUES (?, ?, ?, ?)';
+      db.query(insertQuery, [name, email, password, ebalance], (err, result) => {
         if (err) {
           throw err;
         }

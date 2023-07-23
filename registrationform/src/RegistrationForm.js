@@ -38,6 +38,7 @@ const RegistrationForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    ebalance:'',
   });
 
   const handleChange = (e) => {
@@ -56,7 +57,7 @@ const RegistrationForm = () => {
       const response = await axios.post('http://localhost:5000/register', formData);
       alert(response.data.message);
       // Clear the form after successful registration
-      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+      setFormData({ name: '', email: '', password: '', confirmPassword: '', ebalance: '' });
     } catch (error) {
       if (error.response && error.response.status === 409) {
         alert(error.response.data.message); // Display the duplicate email error message
@@ -76,6 +77,10 @@ const RegistrationForm = () => {
       <label style={labelStyles}>
         Email:
         <input type="email" name="email" value={formData.email} onChange={handleChange} style={inputStyles} required/>
+      </label>
+      <label style={labelStyles}>
+        e₹ Balance:
+        <input type="number" name="ebalance" value={formData.ebalance} onChange={handleChange} style={inputStyles} required/>
       </label>
       <label style={labelStyles}>
         Password:
